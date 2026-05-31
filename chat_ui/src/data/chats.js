@@ -1,0 +1,145 @@
+// Realistic dummy data for the Nova Chat UI.
+
+export const currentUser = {
+  id: "me",
+  name: "Aria Quinn",
+  handle: "@ariaq",
+  avatar: "AQ",
+  color: "from-blue-500 to-cyan-400",
+  status: "Active now",
+}
+
+export const conversations = [
+  {
+    id: "c1",
+    name: "Maya Rodriguez",
+    avatar: "MR",
+    color: "from-fuchsia-500 to-pink-400",
+    online: true,
+    typing: false,
+    unread: 2,
+    role: "Product Designer",
+    lastActive: "Active now",
+    lastMessage: "The new prototype looks incredible",
+    time: "2:14 PM",
+    messages: [
+      { id: "m1", from: "them", text: "Hey Aria! Did you get a chance to review the dashboard mockups?", time: "1:58 PM" },
+      { id: "m2", from: "me", text: "Just opened them — the spacing feels so much cleaner now.", time: "2:01 PM" },
+      { id: "m3", from: "them", text: "Right? I reworked the entire grid system.", time: "2:02 PM" },
+      { id: "m4", from: "me", text: "Love it. Can you send over the component library too?", time: "2:09 PM" },
+      { id: "m5", from: "them", text: "The new prototype looks incredible", time: "2:14 PM" },
+    ],
+  },
+  {
+    id: "c2",
+    name: "Design Guild",
+    avatar: "DG",
+    color: "from-violet-500 to-indigo-400",
+    online: true,
+    typing: true,
+    unread: 5,
+    group: true,
+    members: 8,
+    role: "8 members",
+    lastActive: "12 online",
+    lastMessage: "Liam: pushing the figma file now",
+    time: "1:47 PM",
+    messages: [
+      { id: "m1", from: "them", author: "Noah", text: "Standup in 10 minutes everyone!", time: "1:30 PM" },
+      { id: "m2", from: "me", text: "On my way, grabbing coffee first.", time: "1:33 PM" },
+      { id: "m3", from: "them", author: "Liam", text: "pushing the figma file now", time: "1:47 PM" },
+    ],
+  },
+  {
+    id: "c3",
+    name: "Kenji Tanaka",
+    avatar: "KT",
+    color: "from-amber-500 to-orange-400",
+    online: false,
+    typing: false,
+    unread: 0,
+    role: "Frontend Engineer",
+    lastActive: "Last seen 1h ago",
+    lastMessage: "Shipped the animation refactor",
+    time: "11:20 AM",
+    messages: [
+      { id: "m1", from: "them", text: "The transitions are buttery smooth now.", time: "11:02 AM" },
+      { id: "m2", from: "me", text: "Amazing work. Merging it in.", time: "11:18 AM" },
+      { id: "m3", from: "them", text: "Shipped the animation refactor", time: "11:20 AM" },
+    ],
+  },
+  {
+    id: "c4",
+    name: "Sofia Almeida",
+    avatar: "SA",
+    color: "from-emerald-500 to-teal-400",
+    online: true,
+    typing: false,
+    unread: 0,
+    role: "Marketing Lead",
+    lastActive: "Active now",
+    lastMessage: "Can we hop on a quick call?",
+    time: "Yesterday",
+    messages: [
+      { id: "m1", from: "them", text: "The launch numbers are looking great!", time: "9:40 AM" },
+      { id: "m2", from: "me", text: "Let's celebrate this week.", time: "9:45 AM" },
+      { id: "m3", from: "them", text: "Can we hop on a quick call?", time: "9:51 AM" },
+    ],
+  },
+  {
+    id: "c5",
+    name: "Leo Hartman",
+    avatar: "LH",
+    color: "from-rose-500 to-red-400",
+    online: false,
+    typing: false,
+    unread: 0,
+    role: "Founder",
+    lastActive: "Last seen yesterday",
+    lastMessage: "Thanks for the update!",
+    time: "Mon",
+    messages: [
+      { id: "m1", from: "them", text: "How's the roadmap coming along?", time: "Mon 4:10 PM" },
+      { id: "m2", from: "me", text: "Right on track for Q3.", time: "Mon 4:22 PM" },
+      { id: "m3", from: "them", text: "Thanks for the update!", time: "Mon 4:25 PM" },
+    ],
+  },
+  {
+    id: "c6",
+    name: "Priya Nair",
+    avatar: "PN",
+    color: "from-sky-500 to-blue-400",
+    online: true,
+    typing: false,
+    unread: 1,
+    role: "Data Scientist",
+    lastActive: "Active now",
+    lastMessage: "Sent you the analytics report",
+    time: "Sun",
+    messages: [
+      { id: "m1", from: "them", text: "Numbers are trending up nicely.", time: "Sun 2:00 PM" },
+      { id: "m2", from: "them", text: "Sent you the analytics report", time: "Sun 2:01 PM" },
+    ],
+  },
+]
+
+export const stats = [
+  { label: "Online friends", value: "24", delta: "+6", tone: "cyan" },
+  { label: "Active chats", value: "12", delta: "+3", tone: "indigo" },
+  { label: "Unread", value: "8", delta: "new", tone: "violet" },
+]
+
+export const sharedMedia = [
+  "from-blue-500 to-cyan-400",
+  "from-violet-500 to-fuchsia-400",
+  "from-emerald-500 to-teal-400",
+  "from-amber-500 to-orange-400",
+  "from-rose-500 to-pink-400",
+  "from-indigo-500 to-blue-400",
+]
+
+export const mutualGroups = [
+  { name: "Design Guild", members: 8, color: "from-violet-500 to-indigo-400" },
+  { name: "Launch Team", members: 14, color: "from-emerald-500 to-teal-400" },
+  { name: "Weekend Hikes", members: 6, color: "from-amber-500 to-orange-400" },
+]

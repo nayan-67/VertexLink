@@ -1,0 +1,90 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@500;600;700;800&display=swap");
+
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --app-bg: #070b18;
+    --panel: #0f152ab8;
+    --panel-border: #6366f129;
+    --text: #e7ecff;
+    --muted: #93a0c2;
+  }
+
+  html.light {
+    --app-bg: #eef1fb;
+    --panel: #ffffffc7;
+    --panel-border: #6366f12e;
+    --text: #1a2138;
+    --muted: #5b658a;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--app-bg);
+    color: var(--text);
+    font-family: "Outfit", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+}
+
+@layer components {
+  .glass {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .text-muted {
+    color: var(--muted);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #60a5fa, #818cf8 45%, #22d3ee);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* Custom scrollbar */
+.scroll-area {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(129, 140, 248, 0.45) transparent;
+}
+
+.scroll-area::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scroll-area::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.6), rgba(34, 211, 238, 0.5));
+  border-radius: 999px;
+}
+
+.scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Aurora background blobs */
+.aurora {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.55;
+  pointer-events: none;
+}
