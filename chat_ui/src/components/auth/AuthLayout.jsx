@@ -34,7 +34,7 @@ export default function AuthLayout({ children }) {
                 <span className="gradient-text">alive</span>.
               </motion.h1>
               <p className="mt-4 max-w-md text-pretty text-muted">
-                Nova Chat brings your team and friends together with a fast, elegant and secure messaging experience.
+                Vertex Link brings your team and friends together with a fast, elegant and secure messaging experience.
               </p>
             </div>
             <div className="space-y-4">

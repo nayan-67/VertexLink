@@ -1,29 +1,48 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
-import { ArrowRight, Lock, Mail, User } from "lucide-react"
-import AuthLayout from "../components/auth/AuthLayout.jsx"
-import FloatingInput from "../components/auth/FloatingInput.jsx"
-import SocialButtons from "../components/auth/SocialButtons.jsx"
-import { useToast } from "../components/common/Toast.jsx"
+import { ArrowRight, Lock, Mail, Phone, User } from "lucide-react"
+import AuthLayout from "@/components/auth/AuthLayout.jsx"
+import FloatingInput from "@/components/auth/FloatingInput.jsx"
+import SocialButtons from "@/components/auth/SocialButtons.jsx"
+import { useToast } from "@/components/common/Toast.jsx"
 import { BorderBeam } from "@/components/lightswind/border-beam.js"
+import { api, getApiErrorMessage } from "@/lib/api.js"
+import { setAuthToken, setAuthUser } from "@/lib/auth.js"
+import { setEchoAuthToken } from "@/lib/echo.js"
 
 export default function Register() {
   const navigate = useNavigate()
   const { notify } = useToast()
-  const [form, setForm] = useState({ name: "", email: "", password: "" })
+  const [form, setForm] = useState({ name: "", phone: "", email: "", password: "" })
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
 
   const update = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }))
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => {
+
+    try {
+      if (form.password !== confirmPassword) {
+        notify("Passwords do not match", "error")
+        setLoading(false)
+        return
+      }
+
+      const { data } = await api.post("/register", form)
+      setAuthToken(data.token)
+      setAuthUser(data.user)
+      setEchoAuthToken(data.token)
+      notify("Account created — welcome!")
+      navigate("/login")
+    } catch (error) {
+      console.error("Registration failed", error)
+      notify(getApiErrorMessage(error, "Registration failed"), "error")
+    } finally {
       setLoading(false)
-      notify("Account created — welcome to Nova!")
-      navigate("/app")
-    }, 900)
+    }
   }
 
   return (
@@ -39,14 +58,15 @@ export default function Register() {
 
       <div className="mb-7">
         <h2 className="font-display text-2xl font-bold">Create your account</h2>
-        <p className="mt-1 text-sm text-muted">Join Nova Chat and start connecting in seconds.</p>
+        <p className="mt-1 text-sm text-muted">Join Vertex Link and start connecting in seconds.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <FloatingInput id="name" label="Full name" icon={User} value={form.name} onChange={update("name")} />
         <FloatingInput id="email" label="Email address" type="email" icon={Mail} value={form.email} onChange={update("email")} />
+        <FloatingInput id="phone" label="Phone number" type="tel" icon={Phone} value={form.phone} onChange={update("phone")} />
         <FloatingInput id="password" label="Password" type="password" icon={Lock} value={form.password} onChange={update("password")} />
-
+        <FloatingInput id="confirmPassword" label="Confirm password" type="password" icon={Lock} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
         <label className="flex cursor-pointer items-start gap-2 text-sm text-muted">
           <input type="checkbox" defaultChecked className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/5 accent-brand-indigo" />
           <span>

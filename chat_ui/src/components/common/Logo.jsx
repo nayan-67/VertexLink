@@ -10,7 +10,7 @@ export default function Logo({ withText = true, size = "md" }) {
       {withText && (
         <div className="leading-tight">
           <p className="font-display text-lg font-bold tracking-tight">
-            Nova<span className="gradient-text">Chat</span>
+            Vertex<span className="gradient-text">Link</span>
           </p>
           <p className="text-[11px] text-muted">Premium messaging</p>
         </div>

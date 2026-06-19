@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import Sidebar from "@/components/chat/Sidebar.jsx"
 import ChatHeader from "@/components/chat/ChatHeader.jsx"
@@ -9,8 +10,12 @@ import EmptyState from "@/components/chat/EmptyState.jsx"
 import SettingsModal from "@/components/chat/SettingsModal.jsx"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/lightswind/resizable"
 import { conversations as initialConversations } from "@/data/chats.js"
+import { getAuthToken } from "@/lib/auth.js"
+import { api } from "@/lib/api.js"
+import { echo, getSocketId, setEchoAuthToken } from "@/lib/echo.js"
 
 export default function ChatPage() {
+  const navigate = useNavigate()
   const [conversations, setConversations] = useState(initialConversations)
   const [activeId, setActiveId] = useState("c1")
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -19,26 +24,88 @@ export default function ChatPage() {
 
   const active = conversations.find((c) => c.id === activeId)
 
+  useEffect(() => {
+    const token = getAuthToken()
+
+    if (!token) {
+      navigate("/login", { replace: true })
+      return
+    }
+
+    setEchoAuthToken(token)
+  }, [navigate])
+
+  const appendMessage = useCallback((conversationId, message, { markUnread = false } = {}) => {
+    setConversations((prev) =>
+      prev.map((c) => {
+        if (c.id !== conversationId) return c
+
+        return {
+          ...c,
+          lastMessage: message.text ?? c.lastMessage,
+          time: message.time ?? c.time,
+          unread: markUnread ? c.unread + 1 : c.unread,
+          messages: [...c.messages, message],
+        }
+      }),
+    )
+  }, [])
+
+  useEffect(() => {
+    if (!activeId) return
+
+    const channelName = `chat.${activeId}`
+    const channel = echo.private(channelName)
+
+    const handleMessage = (payload) => {
+      const time = payload.time || new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+      const incoming = {
+        id: payload.id || `m${Date.now()}`,
+        text: payload.text,
+        time,
+        from: "them",
+      }
+
+      appendMessage(activeId, incoming)
+    }
+
+    channel.listen(".message.sent", handleMessage)
+
+    return () => {
+      channel.stopListening(".message.sent", handleMessage)
+      echo.leave(channelName)
+    }
+  }, [activeId, appendMessage])
+
   const selectConversation = (id) => {
     setActiveId(id)
     setSidebarOpen(false)
     setConversations((prev) => prev.map((c) => (c.id === id ? { ...c, unread: 0 } : c)))
   }
 
-  const sendMessage = (text) => {
-    const time = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
-    setConversations((prev) =>
-      prev.map((c) =>
-        c.id === activeId
-          ? {
-            ...c,
-            lastMessage: text,
-            time: "now",
-            messages: [...c.messages, { id: `m${Date.now()}`, from: "me", text, time, read: false }],
-          }
-          : c,
-      ),
-    )
+  const sendMessage = async (text) => {
+    if (!activeId) return
+
+    try {
+      const socketId = getSocketId()
+      const { data } = await api.post("/messages", { conversationId: activeId, text }, {
+        headers: {
+          ...(socketId ? { "X-Socket-Id": socketId } : {}),
+        },
+      })
+      const time = data?.message?.time || new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+      const outgoing = {
+        id: data?.message?.id || `m${Date.now()}`,
+        text,
+        time,
+        from: "me",
+        read: false,
+      }
+
+      appendMessage(activeId, outgoing)
+    } catch (error) {
+      console.error("Failed to send message", error)
+    }
   }
 
   const chatArea = (

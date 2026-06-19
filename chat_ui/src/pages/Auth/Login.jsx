@@ -1,28 +1,40 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
-import { ArrowRight, Lock, Mail } from "lucide-react"
-import AuthLayout from "../components/auth/AuthLayout.jsx"
-import FloatingInput from "../components/auth/FloatingInput.jsx"
-import SocialButtons from "../components/auth/SocialButtons.jsx"
-import { useToast } from "../components/common/Toast.jsx"
+import { ArrowRight, Lock, Mail, Phone } from "lucide-react"
+import AuthLayout from "@/components/auth/AuthLayout.jsx"
+import FloatingInput from "@/components/auth/FloatingInput.jsx"
+import SocialButtons from "@/components/auth/SocialButtons.jsx"
+import { useToast } from "@/components/common/Toast.jsx"
 import { BorderBeam } from "@/components/lightswind/border-beam.js"
+import { api, getApiErrorMessage } from "@/lib/api.js"
+import { setAuthToken, setAuthUser } from "@/lib/auth.js"
+import { setEchoAuthToken } from "@/lib/echo.js"
 
 export default function Login() {
   const navigate = useNavigate()
   const { notify } = useToast()
-  const [email, setEmail] = useState("aria@novachat.app")
-  const [password, setPassword] = useState("password")
+  const [email, setEmail] = useState()
+  const [password, setPassword] = useState()
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      notify("Welcome back, Aria!")
+
+    try {
+      const { data } = await api.post("/login", { email, password })
+      setAuthToken(data.token)
+      setAuthUser(data.user)
+      setEchoAuthToken(data.token)
+      notify("Welcome back!")
       navigate("/app")
-    }, 900)
+    } catch (error) {
+      console.error("Login failed", error)
+      notify(getApiErrorMessage(error, "Login failed"), "error")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

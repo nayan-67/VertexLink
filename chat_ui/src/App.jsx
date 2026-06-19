@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
-import Login from "./pages/Login.jsx"
-import Register from "./pages/Register.jsx"
+import Login from "./pages/Auth/Login.jsx"
+import Register from "./pages/Auth/Register.jsx"
 import ChatPage from "./pages/ChatPage.jsx"
 import { ToastProvider } from "./components/common/Toast.jsx"
 
